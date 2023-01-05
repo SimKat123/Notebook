@@ -54,41 +54,29 @@ app.post("/api/notes", (req, res) => {
 });
 
 // DELETE notes from json file
-// app.delete(`/api/notes/`, (req, res) => {
-//   res.json(`${req.method} has been received`);
-//   console.info(`${req.method} has been received`);
-//   // Destructuring
-//   const { title, text } = req.body;
-//   if (title && text) {
-//     const delNote= {
-//       title,
-//       text,
-//       id: uuidv4(),
-//     };
-//     fs.readFile("./db/db.json", "utf8", (err, data) => {
-//       if (err) {
-//         console.error(err);
-//       } else {
-//         fs.unlink("./db/db.json", (err) => {
-//             if (err) {
-//             console.error(err);
-//             delete notes.id;
-            
-//             console.log('Note deleted');
-//         } else {
-
-//         }
-//         JSON.stringify(parsedNotes, null, 4),
-//         (writeErr) => (writeErr ? console.error(writeErr) : res.send(db))
-//     });
-//         const parsedNotes = JSON.parse(data);
-//         parsedNotes.push(delNote);
-//       }
-//     });
-//   } else {
-//     res.status(500).json("Error in adding notes");
-//   }
-// });
+app.delete(`/api/notes/:id`, (req, res) => {
+  res.json(`${req.method} has been received`);
+  console.info(`${req.method} has been received`);
+  // Destructuring
+  const id = req.params.id;
+  console.log(id);
+  fs.readFile("./db/db.json", "utf8", (err, data) => {
+    if (err) {
+      console.error(err);
+    } else {
+      const parsedNotes = JSON.parse(data);
+      const filteredNotes = parsedNotes.filter((note) => note.id != id);
+      fs.writeFile(
+        "./db/db.json",
+        JSON.stringify(filteredNotes, null, 4),
+        (writeErr) =>
+          writeErr
+            ? res.status(500).json("Error in deleting notes")
+            : res.send(db)
+      );
+    }
+  });
+});
 
 // wildcard route redirects to either index or notes
 app.get("/notes", (req, res) =>
