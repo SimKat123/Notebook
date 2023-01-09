@@ -44,7 +44,7 @@ app.post("/api/notes", (req, res) => {
         fs.writeFile(
           "./db/db.json",
           JSON.stringify(parsedNotes, null, 4),
-          (writeErr) => (writeErr ? console.error(writeErr) : res.send(db))
+          (writeErr) => (writeErr ? console.error(writeErr) : res.send(notes))
         );
       }
     });
@@ -72,7 +72,7 @@ app.delete(`/api/notes/:id`, (req, res) => {
         (writeErr) =>
           writeErr
             ? res.status(500).json("Error in deleting notes")
-            : res.send(db)
+            : res.send(notes)
       );
     }
   });
